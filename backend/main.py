@@ -568,6 +568,23 @@ async def semantic_search(req: SearchRequest):
         price_filter = f"FILTER(?hp >= {min_price})"
 
     if clauses or price_filter:
+        if price_filter:
+            lot_block = f"""
+  ?lot auction:forArtwork ?aw ;
+       auction:status "SETTLED" ;
+       auction:hammerPrice ?hp ;
+       auction:auctionHouse ?auctionHouse ;
+       auction:auctionDate ?auctionDate .
+  {price_filter}"""
+        else:
+            lot_block = f"""
+  OPTIONAL {{
+    ?lot auction:forArtwork ?aw ;
+         auction:status "SETTLED" ;
+         auction:hammerPrice ?hp ;
+         auction:auctionHouse ?auctionHouse ;
+         auction:auctionDate ?auctionDate .
+  }}"""
         sparql_body = f"""
 SELECT DISTINCT ?aw ?title ?year ?arLabel ?mvName ?hp ?auctionHouse ?auctionDate
 WHERE {{
@@ -583,14 +600,7 @@ WHERE {{
     ?aw artwork:belongsToMovement ?mv .
     ?mv artwork:name ?mvName .
   }}
-  OPTIONAL {{
-    ?lot auction:forArtwork ?aw ;
-         auction:status "SETTLED" ;
-         auction:hammerPrice ?hp ;
-         auction:auctionHouse ?auctionHouse ;
-         auction:auctionDate ?auctionDate .
-    {price_filter}
-  }}
+{lot_block}
 }}
 ORDER BY DESC(?hp)
 LIMIT 20"""
