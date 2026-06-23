@@ -108,7 +108,7 @@ $resp = Invoke-WebRequest -Uri $SparqlUrl -Method POST `
     -UseBasicParsing `
     -ErrorAction Stop
 
-$json  = $resp.Content | ConvertFrom-Json
+$json  = [System.Text.Encoding]::UTF8.GetString($resp.Content) | ConvertFrom-Json
 $count = $json.results.bindings[0].count.value
 
 Write-Host "`n=== 로드 완료 ===" -ForegroundColor Cyan

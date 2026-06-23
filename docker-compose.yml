@@ -4,8 +4,9 @@
 
 services:
   fuseki:
-    image: apache/jena-fuseki:4
+    image: stain/jena-fuseki
     container_name: art-auction-fuseki
+    user: "0"
     ports:
       - "3030:3030"
     environment:
@@ -13,9 +14,9 @@ services:
       - JVM_ARGS=-Xmx2g -Xms512m
     volumes:
       - fuseki-data:/fuseki/databases
-      - ./fuseki-config:/fuseki/configuration:ro
+      - ./fuseki-config:/fuseki/configuration
     healthcheck:
-      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3030/$$/ping || exit 1"]
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3030/ 2>&1; [ $? -le 1 ] && exit 0 || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 18
