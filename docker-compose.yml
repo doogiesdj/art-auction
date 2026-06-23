@@ -23,6 +23,21 @@ services:
       start_period: 40s
     restart: unless-stopped
 
+  backend:
+    build: ./backend
+    container_name: art-auction-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./frontend:/app/frontend:ro
+    environment:
+      - FUSEKI_URL=http://fuseki:3030
+      - FRONTEND_DIR=/app/frontend
+    depends_on:
+      fuseki:
+        condition: service_healthy
+    restart: unless-stopped
+
 volumes:
   fuseki-data:
     name: art-auction-fuseki-data
