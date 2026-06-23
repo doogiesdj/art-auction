@@ -195,6 +195,72 @@ art-auction/
 
 ---
 
+## 트리플스토어 설정
+
+### 1. Fuseki 기동
+
+```bash
+docker compose up -d
+```
+
+관리 콘솔: http://localhost:3030 (admin / art-auction-2024)
+
+### 2. 온톨로지 및 샘플 데이터 로드
+
+**PowerShell (Windows):**
+```powershell
+.\scripts\load-data.ps1
+```
+
+**bash (Linux/macOS):**
+```bash
+bash scripts/load-data.sh
+```
+
+스크립트가 Fuseki 준비를 자동 대기한 후 온톨로지와 샘플 데이터를 순서대로 로드한다.
+
+### 3. 파일 구조
+
+```
+ontology/
+├── art-auction-ontology.ttl   # OWL 온톨로지 — 클래스·속성 정의
+└── sample-data.ttl            # 샘플 인스턴스 — 작가 5명, 작품 12점, 로트 13개
+fuseki-config/
+└── art-auction.ttl            # Fuseki TDB2 데이터셋 설정
+docker-compose.yml             # Apache Jena Fuseki:4
+scripts/
+├── load-data.ps1              # 데이터 로드 (PowerShell)
+└── load-data.sh               # 데이터 로드 (bash)
+```
+
+### 4. SPARQL 테스트 쿼리
+
+```sparql
+PREFIX artwork: <http://art-auction.io/ontology/artwork#>
+PREFIX auction: <http://art-auction.io/ontology/auction#>
+
+SELECT ?title ?year ?hammerPrice
+WHERE {
+  ?aw  a artwork:Artwork ;
+       rdfs:label ?title ;
+       artwork:yearCreated ?year ;
+       artwork:createdIn    ?period ;
+       artwork:belongsToMovement ?mv ;
+       artwork:hasColorPalette   ?cp .
+  ?period artwork:decade "1920s" .
+  ?mv     artwork:name   "인상주의" .
+  ?cp     artwork:temperature "warm" .
+  ?lot auction:forArtwork ?aw ;
+       auction:hammerPrice ?hammerPrice ;
+       auction:status      "SETTLED" .
+  FILTER(?hammerPrice >= 100000000)
+}
+```
+
+→ `lot:L2024-INT-003` (모네 수련 1922, 낙찰가 38,500,000,000 KRW) 반환
+
+---
+
 ## Claude Code 하네스
 
 이 프로젝트는 [Claude Code](https://claude.ai/code) 하네스로 구성되어 있다. `CLAUDE.md`의 트리거 규칙에 따라 경매 관련 요청이 들어오면 `art-auction-orchestrator` 스킬이 자동으로 활성화되어 Router 에이전트를 통해 적절한 레이어로 디스패치된다.

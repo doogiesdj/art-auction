@@ -1,0 +1,27 @@
+# Apache Jena Fuseki — 미술품 경매 트리플스토어
+# SPARQL 엔드포인트: http://localhost:3030/art-auction/sparql
+# 관리 콘솔:         http://localhost:3030  (admin / art-auction-2024)
+
+services:
+  fuseki:
+    image: apache/jena-fuseki:4
+    container_name: art-auction-fuseki
+    ports:
+      - "3030:3030"
+    environment:
+      - ADMIN_PASSWORD=art-auction-2024
+      - JVM_ARGS=-Xmx2g -Xms512m
+    volumes:
+      - fuseki-data:/fuseki/databases
+      - ./fuseki-config:/fuseki/configuration:ro
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:3030/$$/ping || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 18
+      start_period: 40s
+    restart: unless-stopped
+
+volumes:
+  fuseki-data:
+    name: art-auction-fuseki-data

@@ -1,0 +1,39 @@
+# Apache Jena Fuseki 데이터셋 설정
+# 서비스명: /art-auction
+# 스토리지: TDB2 (영속적)
+# 경로:     /fuseki/databases/art-auction
+
+PREFIX fuseki:  <http://jena.apache.org/fuseki#>
+PREFIX rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+PREFIX rdfs:    <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX tdb2:    <http://jena.apache.org/2016/tdb#>
+PREFIX ja:      <http://jena.hpl.hp.com/2005/11/Assembler#>
+
+<#service_art_auction>
+    rdf:type   fuseki:Service ;
+    rdfs:label "Art Auction Knowledge Graph" ;
+    fuseki:name "art-auction" ;
+
+    fuseki:endpoint [
+        fuseki:operation fuseki:query ;
+        fuseki:name      "sparql"
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:update ;
+        fuseki:name      "update"
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:gsp-rw ;
+        fuseki:name      "data"
+    ] ;
+    fuseki:endpoint [
+        fuseki:operation fuseki:gsp-r ;
+        fuseki:name      "get"
+    ] ;
+
+    fuseki:dataset <#tdb2_art_auction> ;
+    .
+
+<#tdb2_art_auction> rdf:type     tdb2:DatasetTDB2 ;
+    tdb2:location "/fuseki/databases/art-auction" ;
+    .

@@ -1,0 +1,558 @@
+# 미술품 경매 플랫폼 — 샘플 인스턴스 데이터
+# 작가 5명, 작품 12점, 경매 로트 13개, 출처 체인 2개
+# GraphRAG 테스트 시나리오: "1920년대 따뜻한 색조 인상주의 낙찰가 1억 이상" → aw:water-lilies-1922
+
+@prefix owl:        <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+@prefix artwork:    <http://art-auction.io/ontology/artwork#> .
+@prefix auction:    <http://art-auction.io/ontology/auction#> .
+@prefix provenance: <http://art-auction.io/ontology/provenance#> .
+
+@prefix mv:   <http://art-auction.io/data/movement/> .
+@prefix pr:   <http://art-auction.io/data/period/> .
+@prefix ar:   <http://art-auction.io/data/artist/> .
+@prefix aw:   <http://art-auction.io/data/artwork/> .
+@prefix cp:   <http://art-auction.io/data/palette/> .
+@prefix lot:  <http://art-auction.io/data/lot/> .
+@prefix prov: <http://art-auction.io/data/provenance/> .
+
+# ─────────────────────────────────────────────
+# 미술 사조 (ArtMovement)
+# ─────────────────────────────────────────────
+
+mv:impressionism a artwork:ArtMovement ;
+    rdfs:label       "인상주의"@ko , "Impressionism"@en ;
+    artwork:name     "인상주의" ;
+    artwork:movementEra "modern" .
+
+mv:korean-abstract a artwork:ArtMovement ;
+    rdfs:label       "한국 추상표현주의"@ko , "Korean Abstract Expressionism"@en ;
+    artwork:name     "한국 추상표현주의" ;
+    artwork:movementEra "modern" .
+
+mv:korean-realism a artwork:ArtMovement ;
+    rdfs:label       "한국 민족 리얼리즘"@ko , "Korean Nationalist Realism"@en ;
+    artwork:name     "한국 민족 리얼리즘" ;
+    artwork:movementEra "modern" .
+
+mv:korean-figurative a artwork:ArtMovement ;
+    rdfs:label       "한국 서정적 구상"@ko , "Korean Lyrical Figurative"@en ;
+    artwork:name     "한국 서정적 구상" ;
+    artwork:movementEra "modern" .
+
+# ─────────────────────────────────────────────
+# 시대 (Period)
+# ─────────────────────────────────────────────
+
+pr:1880s a artwork:Period ;
+    rdfs:label    "1880년대"@ko ;
+    artwork:decade "1880s" ;
+    artwork:era    "modern" .
+
+pr:1900s a artwork:Period ;
+    rdfs:label    "1900년대"@ko ;
+    artwork:decade "1900s" ;
+    artwork:era    "modern" .
+
+pr:1920s a artwork:Period ;
+    rdfs:label    "1920년대"@ko ;
+    artwork:decade "1920s" ;
+    artwork:era    "modern" .
+
+pr:1930s a artwork:Period ;
+    rdfs:label    "1930년대"@ko ;
+    artwork:decade "1930s" ;
+    artwork:era    "modern" .
+
+pr:1950s a artwork:Period ;
+    rdfs:label    "1950년대"@ko ;
+    artwork:decade "1950s" ;
+    artwork:era    "modern" .
+
+pr:1960s a artwork:Period ;
+    rdfs:label    "1960년대"@ko ;
+    artwork:decade "1960s" ;
+    artwork:era    "modern" .
+
+pr:1970s a artwork:Period ;
+    rdfs:label    "1970년대"@ko ;
+    artwork:decade "1970s" ;
+    artwork:era    "modern" .
+
+pr:1980s a artwork:Period ;
+    rdfs:label    "1980년대"@ko ;
+    artwork:decade "1980s" ;
+    artwork:era    "modern" .
+
+# ─────────────────────────────────────────────
+# 색감 팔레트 (ColorPalette)
+# ─────────────────────────────────────────────
+
+cp:warm-high-high a artwork:ColorPalette ;
+    rdfs:label         "따뜻한 고채도 고명도"@ko ;
+    artwork:temperature "warm" ;
+    artwork:saturation  "high" ;
+    artwork:brightness  "high" ;
+    artwork:dominantColor "yellow-green, violet" .
+
+cp:warm-medium-high a artwork:ColorPalette ;
+    rdfs:label         "따뜻한 중채도 고명도"@ko ;
+    artwork:temperature "warm" ;
+    artwork:saturation  "medium" ;
+    artwork:brightness  "high" ;
+    artwork:dominantColor "gold, orange" .
+
+cp:warm-high-medium a artwork:ColorPalette ;
+    rdfs:label         "따뜻한 고채도 중명도"@ko ;
+    artwork:temperature "warm" ;
+    artwork:saturation  "high" ;
+    artwork:brightness  "medium" ;
+    artwork:dominantColor "red, orange" .
+
+cp:warm-high-low a artwork:ColorPalette ;
+    rdfs:label         "따뜻한 고채도 저명도"@ko ;
+    artwork:temperature "warm" ;
+    artwork:saturation  "high" ;
+    artwork:brightness  "low" ;
+    artwork:dominantColor "dark red, brown" .
+
+cp:cool-high-medium a artwork:ColorPalette ;
+    rdfs:label         "차가운 고채도 중명도"@ko ;
+    artwork:temperature "cool" ;
+    artwork:saturation  "high" ;
+    artwork:brightness  "medium" ;
+    artwork:dominantColor "blue, indigo" .
+
+cp:cool-medium-medium a artwork:ColorPalette ;
+    rdfs:label         "차가운 중채도 중명도"@ko ;
+    artwork:temperature "cool" ;
+    artwork:saturation  "medium" ;
+    artwork:brightness  "medium" ;
+    artwork:dominantColor "blue-grey, silver" .
+
+cp:neutral-low-medium a artwork:ColorPalette ;
+    rdfs:label         "중성 저채도 중명도"@ko ;
+    artwork:temperature "neutral" ;
+    artwork:saturation  "low" ;
+    artwork:brightness  "medium" ;
+    artwork:dominantColor "grey, beige" .
+
+cp:neutral-medium-medium a artwork:ColorPalette ;
+    rdfs:label         "중성 중채도 중명도"@ko ;
+    artwork:temperature "neutral" ;
+    artwork:saturation  "medium" ;
+    artwork:brightness  "medium" ;
+    artwork:dominantColor "ochre, earth tone" .
+
+# ─────────────────────────────────────────────
+# 작가 (Artist)
+# ─────────────────────────────────────────────
+
+ar:monet-claude a artwork:Artist ;
+    rdfs:label         "클로드 모네"@ko , "Claude Monet"@en ;
+    artwork:birthYear  1840 ;
+    artwork:deathYear  1926 ;
+    artwork:nationality "French" ;
+    artwork:memberOf   mv:impressionism .
+
+ar:kim-whanki a artwork:Artist ;
+    rdfs:label         "김환기"@ko , "Kim Whanki"@en ;
+    artwork:birthYear  1913 ;
+    artwork:deathYear  1974 ;
+    artwork:nationality "Korean" ;
+    artwork:memberOf   mv:korean-abstract .
+
+ar:park-sookeun a artwork:Artist ;
+    rdfs:label         "박수근"@ko , "Park Soo-keun"@en ;
+    artwork:birthYear  1914 ;
+    artwork:deathYear  1965 ;
+    artwork:nationality "Korean" ;
+    artwork:memberOf   mv:korean-realism .
+
+ar:lee-jungseop a artwork:Artist ;
+    rdfs:label         "이중섭"@ko , "Lee Jung-seop"@en ;
+    artwork:birthYear  1916 ;
+    artwork:deathYear  1956 ;
+    artwork:nationality "Korean" ;
+    artwork:memberOf   mv:korean-realism .
+
+ar:chun-kyungja a artwork:Artist ;
+    rdfs:label         "천경자"@ko , "Chun Kyung-ja"@en ;
+    artwork:birthYear  1924 ;
+    artwork:deathYear  2015 ;
+    artwork:nationality "Korean" ;
+    artwork:memberOf   mv:korean-figurative .
+
+# ─────────────────────────────────────────────
+# 작품 (Artwork)
+# ─────────────────────────────────────────────
+
+# 모네
+aw:water-lilies-1906 a artwork:Artwork ;
+    rdfs:label             "수련 1906"@ko , "Water Lilies 1906"@en ;
+    artwork:createdBy      ar:monet-claude ;
+    artwork:createdIn      pr:1900s ;
+    artwork:belongsToMovement mv:impressionism ;
+    artwork:hasColorPalette cp:warm-high-high ;
+    artwork:medium         "oil on canvas" ;
+    artwork:width          89.5 ;
+    artwork:height         92.1 ;
+    artwork:yearCreated    1906 .
+
+aw:water-lilies-1922 a artwork:Artwork ;
+    rdfs:label             "수련 1922"@ko , "Water Lilies 1922"@en ;
+    artwork:createdBy      ar:monet-claude ;
+    artwork:createdIn      pr:1920s ;
+    artwork:belongsToMovement mv:impressionism ;
+    artwork:hasColorPalette cp:warm-high-high ;
+    artwork:medium         "oil on canvas" ;
+    artwork:width          200.0 ;
+    artwork:height         180.0 ;
+    artwork:yearCreated    1922 .
+
+aw:haystacks-1891 a artwork:Artwork ;
+    rdfs:label             "건초더미 1891"@ko , "Haystacks 1891"@en ;
+    artwork:createdBy      ar:monet-claude ;
+    artwork:createdIn      pr:1880s ;
+    artwork:belongsToMovement mv:impressionism ;
+    artwork:hasColorPalette cp:warm-medium-high ;
+    artwork:medium         "oil on canvas" ;
+    artwork:width          65.0 ;
+    artwork:height         92.0 ;
+    artwork:yearCreated    1891 .
+
+# 김환기
+aw:where-did-we-meet-1970 a artwork:Artwork ;
+    rdfs:label             "어디서 무엇이 되어 다시 만나랴 1970"@ko , "Where, What Shall We Meet Again 1970"@en ;
+    artwork:createdBy      ar:kim-whanki ;
+    artwork:createdIn      pr:1970s ;
+    artwork:belongsToMovement mv:korean-abstract ;
+    artwork:hasColorPalette cp:cool-high-medium ;
+    artwork:medium         "oil on cotton" ;
+    artwork:width          254.0 ;
+    artwork:height         254.0 ;
+    artwork:yearCreated    1970 ;
+    artwork:hasProvenance  prov:where-p1 .
+
+aw:universe-1971 a artwork:Artwork ;
+    rdfs:label             "우주 5-IV-71 #200 1971"@ko , "Universe 5-IV-71 #200 1971"@en ;
+    artwork:createdBy      ar:kim-whanki ;
+    artwork:createdIn      pr:1970s ;
+    artwork:belongsToMovement mv:korean-abstract ;
+    artwork:hasColorPalette cp:cool-medium-medium ;
+    artwork:medium         "oil on cotton" ;
+    artwork:width          254.0 ;
+    artwork:height         254.0 ;
+    artwork:yearCreated    1971 .
+
+aw:rondo-1938 a artwork:Artwork ;
+    rdfs:label             "론도 1938"@ko , "Rondo 1938"@en ;
+    artwork:createdBy      ar:kim-whanki ;
+    artwork:createdIn      pr:1930s ;
+    artwork:belongsToMovement mv:korean-abstract ;
+    artwork:hasColorPalette cp:warm-high-medium ;
+    artwork:medium         "oil on canvas" ;
+    artwork:width          61.0 ;
+    artwork:height         71.0 ;
+    artwork:yearCreated    1938 .
+
+# 박수근
+aw:laundry-women-1954 a artwork:Artwork ;
+    rdfs:label             "빨래터 1954"@ko , "Laundry Women 1954"@en ;
+    artwork:createdBy      ar:park-sookeun ;
+    artwork:createdIn      pr:1950s ;
+    artwork:belongsToMovement mv:korean-realism ;
+    artwork:hasColorPalette cp:neutral-low-medium ;
+    artwork:medium         "oil on hardboard" ;
+    artwork:width          131.0 ;
+    artwork:height         89.0 ;
+    artwork:yearCreated    1954 ;
+    artwork:hasProvenance  prov:laundry-p1 .
+
+aw:two-children-1962 a artwork:Artwork ;
+    rdfs:label             "두 아이 1962"@ko , "Two Children 1962"@en ;
+    artwork:createdBy      ar:park-sookeun ;
+    artwork:createdIn      pr:1960s ;
+    artwork:belongsToMovement mv:korean-realism ;
+    artwork:hasColorPalette cp:neutral-medium-medium ;
+    artwork:medium         "oil on hardboard" ;
+    artwork:width          24.5 ;
+    artwork:height         33.5 ;
+    artwork:yearCreated    1962 .
+
+# 이중섭
+aw:bull-1953 a artwork:Artwork ;
+    rdfs:label             "황소 1953"@ko , "Bull 1953"@en ;
+    artwork:createdBy      ar:lee-jungseop ;
+    artwork:createdIn      pr:1950s ;
+    artwork:belongsToMovement mv:korean-realism ;
+    artwork:hasColorPalette cp:warm-high-low ;
+    artwork:medium         "oil on board" ;
+    artwork:width          35.5 ;
+    artwork:height         52.0 ;
+    artwork:yearCreated    1953 .
+
+aw:white-ox-1954 a artwork:Artwork ;
+    rdfs:label             "흰 소 1954"@ko , "White Ox 1954"@en ;
+    artwork:createdBy      ar:lee-jungseop ;
+    artwork:createdIn      pr:1950s ;
+    artwork:belongsToMovement mv:korean-realism ;
+    artwork:hasColorPalette cp:cool-medium-medium ;
+    artwork:medium         "oil on board" ;
+    artwork:width          30.0 ;
+    artwork:height         41.7 ;
+    artwork:yearCreated    1954 .
+
+# 천경자
+aw:woman-with-flowers-1974 a artwork:Artwork ;
+    rdfs:label             "화관의 여인 1974"@ko , "Woman with Flower Crown 1974"@en ;
+    artwork:createdBy      ar:chun-kyungja ;
+    artwork:createdIn      pr:1970s ;
+    artwork:belongsToMovement mv:korean-figurative ;
+    artwork:hasColorPalette cp:warm-high-medium ;
+    artwork:medium         "gouache on paper" ;
+    artwork:width          35.0 ;
+    artwork:height         27.0 ;
+    artwork:yearCreated    1974 .
+
+aw:peonies-1980 a artwork:Artwork ;
+    rdfs:label             "목단 1980"@ko , "Peonies 1980"@en ;
+    artwork:createdBy      ar:chun-kyungja ;
+    artwork:createdIn      pr:1980s ;
+    artwork:belongsToMovement mv:korean-figurative ;
+    artwork:hasColorPalette cp:warm-high-medium ;
+    artwork:medium         "gouache on paper" ;
+    artwork:width          53.0 ;
+    artwork:height         45.5 ;
+    artwork:yearCreated    1980 .
+
+# ─────────────────────────────────────────────
+# 경매 로트 (Auction Lot)
+# ─────────────────────────────────────────────
+
+# 김환기 어디서 무엇이 되어 다시 만나랴 — 국내 최고가
+lot:L2023-001 a auction:Lot ;
+    rdfs:label                "2023-001 김환기 어디서"@ko ;
+    auction:lotNumber         "L2023-001" ;
+    auction:forArtwork        aw:where-did-we-meet-1970 ;
+    auction:auctionHouse      "케이옥션" ;
+    auction:auctionDate       "2023-11-23T14:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 10000000000 ;
+    auction:estimatedPriceMax 15000000000 ;
+    auction:hammerPrice       13200000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 김환기 우주
+lot:L2022-007 a auction:Lot ;
+    rdfs:label                "2022-007 김환기 우주"@ko ;
+    auction:lotNumber         "L2022-007" ;
+    auction:forArtwork        aw:universe-1971 ;
+    auction:auctionHouse      "서울옥션" ;
+    auction:auctionDate       "2022-05-19T15:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 15000000000 ;
+    auction:estimatedPriceMax 20000000000 ;
+    auction:hammerPrice       18500000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 김환기 론도
+lot:L2021-015 a auction:Lot ;
+    rdfs:label                "2021-015 김환기 론도"@ko ;
+    auction:lotNumber         "L2021-015" ;
+    auction:forArtwork        aw:rondo-1938 ;
+    auction:auctionHouse      "케이옥션" ;
+    auction:auctionDate       "2021-12-09T14:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 2500000000 ;
+    auction:estimatedPriceMax 4000000000 ;
+    auction:hammerPrice       3500000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 박수근 빨래터
+lot:L2023-042 a auction:Lot ;
+    rdfs:label                "2023-042 박수근 빨래터"@ko ;
+    auction:lotNumber         "L2023-042" ;
+    auction:forArtwork        aw:laundry-women-1954 ;
+    auction:auctionHouse      "서울옥션" ;
+    auction:auctionDate       "2023-06-15T15:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 2000000000 ;
+    auction:estimatedPriceMax 3500000000 ;
+    auction:hammerPrice       2800000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 박수근 두 아이
+lot:L2022-031 a auction:Lot ;
+    rdfs:label                "2022-031 박수근 두 아이"@ko ;
+    auction:lotNumber         "L2022-031" ;
+    auction:forArtwork        aw:two-children-1962 ;
+    auction:auctionHouse      "케이옥션" ;
+    auction:auctionDate       "2022-09-22T14:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 500000000 ;
+    auction:estimatedPriceMax 800000000 ;
+    auction:hammerPrice       650000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 이중섭 황소
+lot:L2024-008 a auction:Lot ;
+    rdfs:label                "2024-008 이중섭 황소"@ko ;
+    auction:lotNumber         "L2024-008" ;
+    auction:forArtwork        aw:bull-1953 ;
+    auction:auctionHouse      "서울옥션" ;
+    auction:auctionDate       "2024-03-28T15:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 2500000000 ;
+    auction:estimatedPriceMax 4000000000 ;
+    auction:hammerPrice       3200000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 이중섭 흰 소
+lot:L2023-056 a auction:Lot ;
+    rdfs:label                "2023-056 이중섭 흰 소"@ko ;
+    auction:lotNumber         "L2023-056" ;
+    auction:forArtwork        aw:white-ox-1954 ;
+    auction:auctionHouse      "케이옥션" ;
+    auction:auctionDate       "2023-09-14T14:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 1500000000 ;
+    auction:estimatedPriceMax 2500000000 ;
+    auction:hammerPrice       2100000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 천경자 화관의 여인
+lot:L2024-022 a auction:Lot ;
+    rdfs:label                "2024-022 천경자 화관의 여인"@ko ;
+    auction:lotNumber         "L2024-022" ;
+    auction:forArtwork        aw:woman-with-flowers-1974 ;
+    auction:auctionHouse      "서울옥션" ;
+    auction:auctionDate       "2024-07-11T15:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 400000000 ;
+    auction:estimatedPriceMax 600000000 ;
+    auction:hammerPrice       520000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 천경자 목단
+lot:L2022-019 a auction:Lot ;
+    rdfs:label                "2022-019 천경자 목단"@ko ;
+    auction:lotNumber         "L2022-019" ;
+    auction:forArtwork        aw:peonies-1980 ;
+    auction:auctionHouse      "케이옥션" ;
+    auction:auctionDate       "2022-03-17T14:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 200000000 ;
+    auction:estimatedPriceMax 350000000 ;
+    auction:hammerPrice       280000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 모네 수련 1906 — 국제 경매
+lot:L2023-001-int a auction:Lot ;
+    rdfs:label                "2023-001-INT 모네 수련 1906"@ko ;
+    auction:lotNumber         "L2023-001-INT" ;
+    auction:forArtwork        aw:water-lilies-1906 ;
+    auction:auctionHouse      "Christie's Seoul" ;
+    auction:auctionDate       "2023-04-18T18:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 40000000000 ;
+    auction:estimatedPriceMax 55000000000 ;
+    auction:hammerPrice       47000000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 모네 수련 1922 — GraphRAG 테스트 핵심 데이터
+# "1920년대 따뜻한 색조의 인상주의 작품 중 낙찰가 1억 이상" 쿼리에 매칭되는 로트
+lot:L2024-INT-003 a auction:Lot ;
+    rdfs:label                "2024-INT-003 모네 수련 1922"@ko ;
+    auction:lotNumber         "L2024-INT-003" ;
+    auction:forArtwork        aw:water-lilies-1922 ;
+    auction:auctionHouse      "Sotheby's Seoul" ;
+    auction:auctionDate       "2024-11-07T18:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 32000000000 ;
+    auction:estimatedPriceMax 45000000000 ;
+    auction:hammerPrice       38500000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 모네 건초더미 1891
+lot:L2022-INT-002 a auction:Lot ;
+    rdfs:label                "2022-INT-002 모네 건초더미"@ko ;
+    auction:lotNumber         "L2022-INT-002" ;
+    auction:forArtwork        aw:haystacks-1891 ;
+    auction:auctionHouse      "Sotheby's Seoul" ;
+    auction:auctionDate       "2022-10-13T18:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 25000000000 ;
+    auction:estimatedPriceMax 38000000000 ;
+    auction:hammerPrice       31200000000 ;
+    auction:status            "SETTLED" ;
+    auction:currency          "KRW" .
+
+# 예정 경매 — 김환기 신작 (SCHEDULED)
+lot:L2026-001 a auction:Lot ;
+    rdfs:label                "2026-001 김환기 (예정)"@ko ;
+    auction:lotNumber         "L2026-001" ;
+    auction:forArtwork        aw:where-did-we-meet-1970 ;
+    auction:auctionHouse      "케이옥션" ;
+    auction:auctionDate       "2026-09-25T14:00:00"^^xsd:dateTime ;
+    auction:estimatedPriceMin 14000000000 ;
+    auction:estimatedPriceMax 18000000000 ;
+    auction:status            "SCHEDULED" ;
+    auction:currency          "KRW" .
+
+# ─────────────────────────────────────────────
+# 출처 체인 (Provenance Chain)
+# ─────────────────────────────────────────────
+
+# 김환기 '어디서 무엇이 되어 다시 만나랴' 출처 체인
+prov:where-p1 a provenance:ProvenanceRecord ;
+    rdfs:label                "어디서 P1 — 김환기 작가 소유"@ko ;
+    provenance:owner          "김환기" ;
+    provenance:acquisitionDate "1970-01-01"^^xsd:date ;
+    provenance:transferDate    "1974-07-25"^^xsd:date ;
+    provenance:institution    "작가 작업실" ;
+    provenance:acquisitionMethod "purchase" ;
+    provenance:nextRecord     prov:where-p2 .
+
+prov:where-p2 a provenance:ProvenanceRecord ;
+    rdfs:label                "어디서 P2 — 홍라희 소유"@ko ;
+    provenance:owner          "홍라희" ;
+    provenance:acquisitionDate "1974-07-25"^^xsd:date ;
+    provenance:transferDate    "2023-11-23"^^xsd:date ;
+    provenance:institution    "개인 컬렉션" ;
+    provenance:acquisitionMethod "auction" ;
+    provenance:nextRecord     prov:where-p3 .
+
+prov:where-p3 a provenance:ProvenanceRecord ;
+    rdfs:label                "어디서 P3 — 리움미술관 소유"@ko ;
+    provenance:owner          "리움미술관" ;
+    provenance:acquisitionDate "2023-11-23"^^xsd:date ;
+    provenance:institution    "리움미술관" ;
+    provenance:acquisitionMethod "auction" .
+
+# 박수근 '빨래터' 출처 체인
+prov:laundry-p1 a provenance:ProvenanceRecord ;
+    rdfs:label                "빨래터 P1 — 박수근 작가 소유"@ko ;
+    provenance:owner          "박수근" ;
+    provenance:acquisitionDate "1954-01-01"^^xsd:date ;
+    provenance:transferDate    "1965-05-06"^^xsd:date ;
+    provenance:institution    "작가 작업실" ;
+    provenance:acquisitionMethod "purchase" ;
+    provenance:nextRecord     prov:laundry-p2 .
+
+prov:laundry-p2 a provenance:ProvenanceRecord ;
+    rdfs:label                "빨래터 P2 — 개인 소장"@ko ;
+    provenance:owner          "개인 소장가" ;
+    provenance:acquisitionDate "1965-05-06"^^xsd:date ;
+    provenance:transferDate    "2023-06-15"^^xsd:date ;
+    provenance:institution    "개인 컬렉션" ;
+    provenance:acquisitionMethod "inheritance" ;
+    provenance:nextRecord     prov:laundry-p3 .
+
+prov:laundry-p3 a provenance:ProvenanceRecord ;
+    rdfs:label                "빨래터 P3 — 컬렉터A 소유"@ko ;
+    provenance:owner          "컬렉터A" ;
+    provenance:acquisitionDate "2023-06-15"^^xsd:date ;
+    provenance:institution    "개인 컬렉션" ;
+    provenance:acquisitionMethod "auction" .

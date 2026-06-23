@@ -1,0 +1,294 @@
+# 미술품 경매 플랫폼 온톨로지 (OWL/Turtle)
+# 버전: 1.0.0
+# SPARQL GraphRAG 기반 다차원 검색을 위한 지식 그래프 스키마
+
+@prefix owl:        <http://www.w3.org/2002/07/owl#> .
+@prefix rdf:        <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs:       <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd:        <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcterms:    <http://purl.org/dc/terms/> .
+@prefix artwork:    <http://art-auction.io/ontology/artwork#> .
+@prefix auction:    <http://art-auction.io/ontology/auction#> .
+@prefix artist:     <http://art-auction.io/ontology/artist#> .
+@prefix period:     <http://art-auction.io/ontology/period#> .
+@prefix provenance: <http://art-auction.io/ontology/provenance#> .
+
+# ─────────────────────────────────────────────
+# 온톨로지 메타데이터
+# ─────────────────────────────────────────────
+
+<http://art-auction.io/ontology/>
+    a owl:Ontology ;
+    rdfs:label      "미술품 경매 플랫폼 온톨로지"@ko ,
+                    "Art Auction Platform Ontology"@en ;
+    dcterms:description
+        "GraphRAG 기반 미술품 경매 플랫폼의 지식 그래프 온톨로지. 작품·작가·사조·시대·색감·경매 로트·출처 체인을 모델링한다."@ko ;
+    owl:versionInfo "1.0.0" .
+
+# ─────────────────────────────────────────────
+# 클래스 정의
+# ─────────────────────────────────────────────
+
+artwork:Artwork a owl:Class ;
+    rdfs:label   "작품"@ko , "Artwork"@en ;
+    rdfs:comment "미술 작품. 회화, 조각, 판화, 드로잉 등 모든 예술 작품을 포함한다."@ko .
+
+artwork:Artist a owl:Class ;
+    rdfs:label   "작가"@ko , "Artist"@en ;
+    rdfs:comment "작품을 창작한 예술가."@ko .
+
+artwork:ArtMovement a owl:Class ;
+    rdfs:label   "미술 사조"@ko , "Art Movement"@en ;
+    rdfs:comment "인상주의, 입체파 등 예술 운동 또는 유파."@ko .
+
+artwork:ColorPalette a owl:Class ;
+    rdfs:label   "색감 팔레트"@ko , "Color Palette"@en ;
+    rdfs:comment "작품의 색감 특성. 온도감(warm/cool/neutral), 채도, 명도를 포함한다."@ko .
+
+artwork:Period a owl:Class ;
+    rdfs:label   "시대"@ko , "Period"@en ;
+    rdfs:comment "작품이 창작된 시대 구분. 10년 단위 연대(decade)로 정의된다."@ko .
+
+auction:Lot a owl:Class ;
+    rdfs:label   "경매 로트"@ko , "Auction Lot"@en ;
+    rdfs:comment "경매에 출품된 단위. 한 작품은 여러 번 경매에 출품되어 복수의 Lot를 가질 수 있다."@ko .
+
+provenance:ProvenanceRecord a owl:Class ;
+    rdfs:label   "출처 기록"@ko , "Provenance Record"@en ;
+    rdfs:comment "작품의 소유권 이전 이력 레코드. nextRecord로 체인을 구성한다."@ko .
+
+# ─────────────────────────────────────────────
+# Artwork — Object Properties
+# ─────────────────────────────────────────────
+
+artwork:createdBy a owl:ObjectProperty ;
+    rdfs:label   "작가"@ko , "created by"@en ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   artwork:Artist .
+
+artwork:hasColorPalette a owl:ObjectProperty ;
+    rdfs:label   "색감 팔레트"@ko , "has color palette"@en ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   artwork:ColorPalette .
+
+artwork:createdIn a owl:ObjectProperty ;
+    rdfs:label   "창작 시대"@ko , "created in period"@en ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   artwork:Period .
+
+artwork:belongsToMovement a owl:ObjectProperty ;
+    rdfs:label   "미술 사조"@ko , "belongs to movement"@en ;
+    rdfs:comment "작품이 직접 귀속되는 미술 사조. createdBy/memberOf 경로로도 사조에 접근 가능하다."@ko ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   artwork:ArtMovement .
+
+artwork:hasProvenance a owl:ObjectProperty ;
+    rdfs:label   "출처 기록"@ko , "has provenance"@en ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   provenance:ProvenanceRecord .
+
+# ─────────────────────────────────────────────
+# Artwork — Datatype Properties
+# ─────────────────────────────────────────────
+
+artwork:medium a owl:DatatypeProperty ;
+    rdfs:label   "매체"@ko , "medium"@en ;
+    rdfs:comment "기법/재료. 예: 'oil on canvas', 'mixed media on paper'"@ko ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   xsd:string .
+
+artwork:width a owl:DatatypeProperty ;
+    rdfs:label   "가로(cm)"@ko , "width cm"@en ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   xsd:decimal .
+
+artwork:height a owl:DatatypeProperty ;
+    rdfs:label   "세로(cm)"@ko , "height cm"@en ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   xsd:decimal .
+
+artwork:yearCreated a owl:DatatypeProperty ;
+    rdfs:label   "창작연도"@ko , "year created"@en ;
+    rdfs:domain  artwork:Artwork ;
+    rdfs:range   xsd:integer .
+
+# ─────────────────────────────────────────────
+# Artist — Object Properties
+# ─────────────────────────────────────────────
+
+artwork:memberOf a owl:ObjectProperty ;
+    rdfs:label   "소속 사조"@ko , "member of"@en ;
+    rdfs:domain  artwork:Artist ;
+    rdfs:range   artwork:ArtMovement .
+
+# ─────────────────────────────────────────────
+# Artist — Datatype Properties
+# ─────────────────────────────────────────────
+
+artwork:birthYear a owl:DatatypeProperty ;
+    rdfs:label   "출생연도"@ko , "birth year"@en ;
+    rdfs:domain  artwork:Artist ;
+    rdfs:range   xsd:integer .
+
+artwork:deathYear a owl:DatatypeProperty ;
+    rdfs:label   "사망연도"@ko , "death year"@en ;
+    rdfs:domain  artwork:Artist ;
+    rdfs:range   xsd:integer .
+
+artwork:nationality a owl:DatatypeProperty ;
+    rdfs:label   "국적"@ko , "nationality"@en ;
+    rdfs:domain  artwork:Artist ;
+    rdfs:range   xsd:string .
+
+# ─────────────────────────────────────────────
+# ArtMovement — Datatype Properties
+# ─────────────────────────────────────────────
+
+artwork:name a owl:DatatypeProperty ;
+    rdfs:label   "명칭"@ko , "name"@en ;
+    rdfs:domain  artwork:ArtMovement ;
+    rdfs:range   xsd:string .
+
+artwork:movementEra a owl:DatatypeProperty ;
+    rdfs:label   "시대"@ko , "movement era"@en ;
+    rdfs:comment "허용값: classical, modern, contemporary"@ko ;
+    rdfs:domain  artwork:ArtMovement ;
+    rdfs:range   xsd:string .
+
+# ─────────────────────────────────────────────
+# ColorPalette — Datatype Properties
+# ─────────────────────────────────────────────
+
+artwork:temperature a owl:DatatypeProperty ;
+    rdfs:label   "온도감"@ko , "temperature"@en ;
+    rdfs:comment "색온도. 허용값: warm, cool, neutral"@ko ;
+    rdfs:domain  artwork:ColorPalette ;
+    rdfs:range   xsd:string .
+
+artwork:saturation a owl:DatatypeProperty ;
+    rdfs:label   "채도"@ko , "saturation"@en ;
+    rdfs:comment "색채 채도. 허용값: high, medium, low"@ko ;
+    rdfs:domain  artwork:ColorPalette ;
+    rdfs:range   xsd:string .
+
+artwork:brightness a owl:DatatypeProperty ;
+    rdfs:label   "명도"@ko , "brightness"@en ;
+    rdfs:comment "색채 명도. 허용값: high, medium, low"@ko ;
+    rdfs:domain  artwork:ColorPalette ;
+    rdfs:range   xsd:string .
+
+artwork:dominantColor a owl:DatatypeProperty ;
+    rdfs:label   "주조색"@ko , "dominant color"@en ;
+    rdfs:domain  artwork:ColorPalette ;
+    rdfs:range   xsd:string .
+
+# ─────────────────────────────────────────────
+# Period — Datatype Properties
+# ─────────────────────────────────────────────
+
+artwork:decade a owl:DatatypeProperty ;
+    rdfs:label   "연대"@ko , "decade"@en ;
+    rdfs:comment "10년 단위. 예: '1920s', '1890s', '2000s'"@ko ;
+    rdfs:domain  artwork:Period ;
+    rdfs:range   xsd:string .
+
+artwork:era a owl:DatatypeProperty ;
+    rdfs:label   "대시대"@ko , "era"@en ;
+    rdfs:comment "허용값: classical, modern, contemporary"@ko ;
+    rdfs:domain  artwork:Period ;
+    rdfs:range   xsd:string .
+
+# ─────────────────────────────────────────────
+# Auction Lot — Object Properties
+# ─────────────────────────────────────────────
+
+auction:forArtwork a owl:ObjectProperty ;
+    rdfs:label   "출품 작품"@ko , "for artwork"@en ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   artwork:Artwork .
+
+# ─────────────────────────────────────────────
+# Auction Lot — Datatype Properties
+# ─────────────────────────────────────────────
+
+auction:lotNumber a owl:DatatypeProperty ;
+    rdfs:label   "로트 번호"@ko , "lot number"@en ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   xsd:string .
+
+auction:auctionHouse a owl:DatatypeProperty ;
+    rdfs:label   "경매 회사"@ko , "auction house"@en ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   xsd:string .
+
+auction:auctionDate a owl:DatatypeProperty ;
+    rdfs:label   "경매 날짜"@ko , "auction date"@en ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   xsd:dateTime .
+
+auction:estimatedPriceMin a owl:DatatypeProperty ;
+    rdfs:label   "추정가 하한(KRW)"@ko , "estimated price min"@en ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   xsd:integer .
+
+auction:estimatedPriceMax a owl:DatatypeProperty ;
+    rdfs:label   "추정가 상한(KRW)"@ko , "estimated price max"@en ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   xsd:integer .
+
+auction:hammerPrice a owl:DatatypeProperty ;
+    rdfs:label   "낙찰가(KRW)"@ko , "hammer price"@en ;
+    rdfs:comment "낙찰 확정 금액(원화). 미낙찰 로트에는 이 속성이 존재하지 않는다."@ko ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   xsd:integer .
+
+auction:status a owl:DatatypeProperty ;
+    rdfs:label   "경매 상태"@ko , "auction status"@en ;
+    rdfs:comment "허용값: DRAFT, SCHEDULED, LIVE, CLOSED, SETTLED, CANCELLED, DISPUTED"@ko ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   xsd:string .
+
+auction:currency a owl:DatatypeProperty ;
+    rdfs:label   "통화"@ko , "currency"@en ;
+    rdfs:domain  auction:Lot ;
+    rdfs:range   xsd:string .
+
+# ─────────────────────────────────────────────
+# Provenance — Datatype Properties
+# ─────────────────────────────────────────────
+
+provenance:owner a owl:DatatypeProperty ;
+    rdfs:label   "소유자"@ko , "owner"@en ;
+    rdfs:domain  provenance:ProvenanceRecord ;
+    rdfs:range   xsd:string .
+
+provenance:acquisitionDate a owl:DatatypeProperty ;
+    rdfs:label   "취득일"@ko , "acquisition date"@en ;
+    rdfs:domain  provenance:ProvenanceRecord ;
+    rdfs:range   xsd:date .
+
+provenance:transferDate a owl:DatatypeProperty ;
+    rdfs:label   "양도일"@ko , "transfer date"@en ;
+    rdfs:domain  provenance:ProvenanceRecord ;
+    rdfs:range   xsd:date .
+
+provenance:institution a owl:DatatypeProperty ;
+    rdfs:label   "기관"@ko , "institution"@en ;
+    rdfs:domain  provenance:ProvenanceRecord ;
+    rdfs:range   xsd:string .
+
+provenance:acquisitionMethod a owl:DatatypeProperty ;
+    rdfs:label   "취득 경위"@ko , "acquisition method"@en ;
+    rdfs:comment "허용값: purchase, gift, inheritance, auction, gallery"@ko ;
+    rdfs:domain  provenance:ProvenanceRecord ;
+    rdfs:range   xsd:string .
+
+# ─────────────────────────────────────────────
+# Provenance — Object Properties
+# ─────────────────────────────────────────────
+
+provenance:nextRecord a owl:ObjectProperty ;
+    rdfs:label   "다음 소유 기록"@ko , "next provenance record"@en ;
+    rdfs:comment "출처 체인의 다음 레코드. 소유권 이전 순서를 연결한다."@ko ;
+    rdfs:domain  provenance:ProvenanceRecord ;
+    rdfs:range   provenance:ProvenanceRecord .
