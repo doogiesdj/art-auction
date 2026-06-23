@@ -307,11 +307,7 @@ function lotCard(lot) {
 async function renderLotDetail(lotId) {
   showLoading();
   try {
-    const [lot, prov] = await Promise.all([
-      apiFetch(`/api/lots/${lotId}`),
-      apiFetch(`/api/provenance/${encodeURIComponent(lot_id_to_artwork_id_placeholder(lotId))}`).catch(() => []),
-    ]);
-
+    const lot = await apiFetch(`/api/lots/${lotId}`);
     const artworkId = lot.artworkId;
     const provData  = artworkId ? await apiFetch(`/api/provenance/${artworkId}`).catch(() => []) : [];
 
@@ -460,9 +456,6 @@ async function renderLotDetail(lotId) {
   }
 }
 
-function lot_id_to_artwork_id_placeholder(lotId) {
-  return lotId;
-}
 
 async function submitBid(lotId) {
   const bidder = document.getElementById('bid-bidder')?.value?.trim();
@@ -501,6 +494,7 @@ async function renderArtworks(filters) {
   if (artworkFilters.movement)    params.set('movement', artworkFilters.movement);
   if (artworkFilters.temperature) params.set('temperature', artworkFilters.temperature);
   if (artworkFilters.decade)      params.set('decade', artworkFilters.decade);
+  if (artworkFilters.artist_id)   params.set('artist_id', artworkFilters.artist_id);
 
   try {
     const artworks = await apiFetch(`/api/artworks?${params}`);
@@ -676,7 +670,7 @@ async function renderArtists() {
 function artistCard(a) {
   const initials = (a.name || '?').charAt(0);
   return `
-    <div class="artist-card" onclick="location.hash='#/artworks?artist_id=${a.id}'">
+    <div class="artist-card" onclick="renderArtworks({artist_id:'${a.id}'})">
       <div class="artist-card-avatar">${initials}</div>
       <div class="artist-card-name">${a.name || '—'}</div>
       ${a.nameEn ? `<div class="artist-card-name-en">${a.nameEn}</div>` : ''}

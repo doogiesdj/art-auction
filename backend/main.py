@@ -272,7 +272,7 @@ ORDER BY ?birthYear
         "deathYear":   val(b, "deathYear"),
         "nationality": val(b, "nationality"),
         "movement":    val(b, "mvName"),
-        "artworkCount":val(b, "artworkCount", "0"),
+        "artworkCount":int(val(b, "artworkCount", 0) or 0),
     } for b in result["results"]["bindings"]]
 
 
@@ -304,7 +304,7 @@ WHERE {{
   OPTIONAL {{ ?lot auction:hammerPrice ?hammerPrice }}
 {status_filter}
 }}
-ORDER BY DESC(?auctionDate)
+ORDER BY {'ASC(?auctionDate)' if status == 'SCHEDULED' else 'DESC(?auctionDate)'}
 """)
 
     return [{
