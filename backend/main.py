@@ -487,18 +487,17 @@ ORDER BY ?acquisitionDate
 @app.get("/api/stats")
 async def get_stats():
     result = await sparql_query("""
-SELECT
-  (COUNT(DISTINCT ?aw) AS ?artworks)
-  (COUNT(DISTINCT ?ar) AS ?artists)
-  (COUNT(DISTINCT ?lot) AS ?lots)
-  (SUM(?hp) AS ?totalVolume)
-  (MAX(?hp) AS ?maxHammer)
+SELECT ?artworks ?artists ?lots ?totalVolume ?maxHammer
 WHERE {
-  ?aw a artwork:Artwork .
-  ?ar a artwork:Artist .
-  ?lot a auction:Lot ;
-       auction:status "SETTLED" ;
-       auction:hammerPrice ?hp .
+  { SELECT (COUNT(DISTINCT ?aw) AS ?artworks) WHERE { ?aw a artwork:Artwork . } }
+  { SELECT (COUNT(DISTINCT ?ar) AS ?artists) WHERE { ?ar a artwork:Artist . } }
+  { SELECT (COUNT(DISTINCT ?lot) AS ?lots) (SUM(?hp) AS ?totalVolume) (MAX(?hp) AS ?maxHammer)
+    WHERE {
+      ?lot a auction:Lot ;
+           auction:status "SETTLED" ;
+           auction:hammerPrice ?hp .
+    }
+  }
 }
 """)
     if not result["results"]["bindings"]:
@@ -541,7 +540,7 @@ async def semantic_search(req: SearchRequest):
     # Art movement
     if any(w in q for w in ["인상주의", "인상파", "impressionism"]):
         clauses.append('  ?aw artwork:belongsToMovement ?fmv . ?fmv artwork:name "인상주의" .')
-    elif any(w in q for w in ["추상표현주의", "추상 표현", "abstract expressionism", "환기"]):
+    elif any(w in q for w in ["추상표현주의", "추상 표현", "추상", "abstract expressionism", "환기"]):
         clauses.append('  ?aw artwork:belongsToMovement ?fmv . ?fmv artwork:name "한국 추상표현주의" .')
     elif any(w in q for w in ["리얼리즘", "realism", "사실주의", "민족", "박수근", "이중섭"]):
         clauses.append('  ?aw artwork:belongsToMovement ?fmv . ?fmv artwork:name "한국 민족 리얼리즘" .')
@@ -552,7 +551,7 @@ async def semantic_search(req: SearchRequest):
     artist_map = {
         "김환기": "kim-whanki",
         "박수근": "park-sookeun",
-        "이중섭": "lee-jungseob",
+        "이중섭": "lee-jungseop",
         "천경자": "chun-kyungja",
         "모네": "monet-claude",
     }
